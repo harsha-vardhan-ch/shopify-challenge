@@ -1,0 +1,255 @@
+<div class="table-wrapper">
+    <div class="table-wrapper__header">
+        <div class="table-wrapper__header--title">Inventory</div>
+        <div class="table-wrapper__header--action">
+            <button
+                type="button"
+                class="btn btn-success"
+                name="openProductModal"
+                data-toggle="add"
+                style="margin-right: 10px"
+            >
+                Add Product
+            </button>
+            <button
+                type="button"
+                class="btn btn-danger"
+                id="deleteProductsButton"
+                disabled
+            >
+                Delete
+            </button>
+        </div>
+    </div>
+
+    <div class="table-wrapper__body">
+        <% if (products.length < 1) { %>
+        <div class="alert alert-warning" role="alert">
+            You don't have any products.
+        </div>
+        <% } else { %>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Product Name</th>
+                    <th scope="col">Barcode</th>
+                    <th scope="col">Quantity Available</th>
+                    <th scope="col" style="text-align: center">Warehouse</th>
+                    <th scope="col" style="text-align: center; width: 90px">
+                        Edit
+                    </th>
+                    <th scope="col" style="text-align: center; width: 50px">
+                        Delete
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <% products.forEach((product, index)=> { %>
+                <tr>
+                    <td scope="row"><%= index + 1 %></td>
+                    <td><%= product.name %></td>
+                    <td><%= product.barcode %></td>
+                    <td><%= product.quantity %></td>
+                    <td style="text-align: center">
+                        <% if (product.location === undefined) { %>
+                        <button
+                            type="button"
+                            class="btn btn-success"
+                            product-id="<%= product.barcode %>"
+                            name="assignButton"
+                        >
+                            Assign
+                        </button>
+                        <% } else { %>
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            product-id="<%= product.barcode %>"
+                            name="assignButton"
+                        >
+                            <%= warehouses.find((warehouse) => { return
+                            warehouse.id === product.location.warehouseId
+                            }).name %>
+                        </button>
+                        <% } %>
+                    </td>
+                    <td style="text-align: center">
+                        <button
+                            name="openProductModal"
+                            data-toggle="edit"
+                            product-data="<%= JSON.stringify(product) %>"
+                            type="button"
+                            class="btn btn-info"
+                        >
+                            Edit
+                        </button>
+                    </td>
+                    <td style="text-align: center">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="<%= product.barcode %>"
+                            name="productDeleteCheckbox"
+                        />
+                    </td>
+                </tr>
+                <% }); %>
+            </tbody>
+        </table>
+        <% } %>
+    </div>
+</div>
+
+<!-- Create product modal -->
+<div
+    class="modal fade"
+    id="productModal"
+    tabindex="-1"
+    aria-labelledby="productModalLabel"
+    aria-hidden="true"
+    data-bs-backdrop="static"
+>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="productModalLabel">
+                    Add new product
+                </h5>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                ></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-floating mb-3">
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="productBarcodeField"
+                                placeholder="1234567890123"
+                            />
+                            <label for="productBarcodeField">Barcode</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-floating mb-3">
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="productNameField"
+                        placeholder="Winnipeg product and Distribution Centre"
+                    />
+                    <label for="productNameField">Product name</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <textarea
+                        class="form-control"
+                        id="productDescriptionField"
+                        rows="3"
+                        style="height: 100%"
+                        aria-label="With textarea"
+                        placeholder="Describe the product"
+                    ></textarea>
+                    <label for="productDescriptionField">Description</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input
+                        type="number"
+                        class="form-control"
+                        id="productQuantityField"
+                        placeholder="30"
+                    />
+                    <label for="productQuantityField">Quantity</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                >
+                    Close
+                </button>
+                <button
+                    type="button"
+                    class="btn btn-success"
+                    id="addProductButton"
+                >
+                    Add
+                </button>
+                <button
+                    type="button"
+                    class="btn btn-info"
+                    product-id="empty"
+                    id="editProductButton"
+                >
+                    Update
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- warehouse assignment modal -->
+<div
+    class="modal fade"
+    id="assignWarehouseModal"
+    tabindex="-1"
+    aria-labelledby="assignWarehouseModalLabel"
+    aria-hidden="true"
+    data-bs-backdrop="static"
+>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="assignWarehouseModalLabel">
+                    Assign product to a warehouse
+                </h5>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                ></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-floating mb-3">
+                    <select
+                        class="form-select"
+                        aria-label="Available warehouses"
+                        id="assignWarehouseSelect"
+                    >
+                        <% warehouses.forEach((warehouse)=> { %>
+                        <option value="<%= warehouse.id %>">
+                            <%= warehouse.name %>
+                        </option>
+                        <% }); %>
+                    </select>
+                    <label for="assignWarehouseSelect">Warehouse</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                >
+                    Close
+                </button>
+                <button
+                    type="button"
+                    class="btn btn-success"
+                    product-id="empty"
+                    id="assignWarehouseButton"
+                >
+                    Assign
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

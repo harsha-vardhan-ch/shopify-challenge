@@ -1,0 +1,35 @@
+{
+    "compilerOptions": {
+        "target": "es2016", /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */
+        "module": "commonjs", /* Specify what module code is generated. */
+        "esModuleInterop": true, /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables `allowSyntheticDefaultImports` for type compatibility. */
+        "outDir": "./dist", /* Specify an output folder for all emitted files. */
+        "baseUrl": "./src", /* Specify the root directory of the project. */
+        "paths": {
+            "@src/*": [
+                "src/*"
+            ],
+            "@shared/*": [
+                "shared/*"
+            ],
+            "@repositories/*": [
+                "repositories/*"
+            ],
+            "@modules/*": [
+                "modules/*"
+            ],
+            "@entities/*": [
+                "entities/*"
+            ],
+        },
+        "allowJs": true, /* Allow JavaScript files to be compiled. */
+        "experimentalDecorators": true, /* Enable experimental support for ES7 decorators. */
+        "emitDecoratorMetadata": true, /* Emit type metadata for decorated classes and properties. */
+        "skipLibCheck": true, /* Skip type checking all .d.ts files. */
+        "forceConsistentCasingInFileNames": true, /* Ensure that casing is correct in imports. */
+        "resolveJsonModule": true /* Resolve modules referenced by `package.json` files in the same way as `resolveJsonFiles` does. */
+    },
+    "include": [
+        "src/**/*.ts"
+    ]
+}

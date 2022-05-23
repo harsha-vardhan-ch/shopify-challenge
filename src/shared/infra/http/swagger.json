@@ -1,0 +1,630 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Shopify Fall 2022 Backend Challenge",
+        "description": "Preloaded data",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "https://shopify-f22-backend.gilhrpenner.repl.co/",
+            "description": "Replit server"
+        },
+        {
+            "url": "http://localhost:3333",
+            "description": "Local server"
+        }
+    ],
+    "paths": {
+        "/warehouse/": {
+            "get": {
+                "tags": [
+                    "Warehouse"
+                ],
+                "summary": "Get all warehouses",
+                "description": "This endpoint allows you to get all available warehouses.",
+                "responses": {
+                    "200": {
+                        "description": "Warehouses found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Warehouse"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Warehouse"
+                ],
+                "summary": "Create a new warehouse",
+                "description": "This endpoint allows you to create a new warehouse. For the scope of this project there is no authentication and therefore all warehouses belong to the same entity.",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/IUpsertWarehouseRequestDTO"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Warehouse created",
+                        "schema": {
+                            "$ref": "#/components/schemas/Warehouse"
+                        }
+                    },
+                    "422": {
+                        "description": "Input is invalid or missing a required field",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/warehouse/{warehouseId}": {
+            "delete": {
+                "tags": [
+                    "Warehouse"
+                ],
+                "summary": "Delete a warehouse",
+                "description": "This endpoint allows you to delete a warehouse. Once you delete a warehouse all products assigned to that location will be unassigned.",
+                "parameters": [
+                    {
+                        "name": "warehouseId",
+                        "in": "path",
+                        "description": "The id of the warehouse to delete",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/components/schemas/UUIDSchema"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Warehouse deleted"
+                    },
+                    "404": {
+                        "description": "Warehouse not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Warehouse"
+                ],
+                "summary": "Update a warehouse",
+                "description": "This endpoint allows you to update a warehouse. Everything but the warehouse id is updated.",
+                "parameters": [
+                    {
+                        "name": "warehouseId",
+                        "in": "path",
+                        "description": "The id of the warehouse to update",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/components/schemas/UUIDSchema"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/IUpsertWarehouseRequestDTO"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Warehouse updated successfully",
+                        "schema": {
+                            "$ref": "#/components/schemas/Warehouse"
+                        }
+                    },
+                    "404": {
+                        "description": "Warehouse not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Input is invalid or missing a required field",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/product/": {
+            "get": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Get all products",
+                "description": "This endpoint allows you to get all products available.",
+                "responses": {
+                    "200": {
+                        "description": "Products found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Product"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Create a new product",
+                "description": "This endpoint allows you to create a new product.\nFor the scope of this project no authentication is required.",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/IUpsertProductRequestDTO"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "The product was created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Product"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "A product with the same barcode already exists",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Input is invalid or missing a required field",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Update a product",
+                "description": "This endpoint allows you to update a product.\nUpdating a product will not change its location as it is handled separately.",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/IUpsertProductRequestDTO"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "The product was updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Product"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "A product with this barcode does not exists",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Input is invalid or missing a required field",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Delete a product",
+                "description": "This endpoint allows you to delete multiple products by passing an array of barcodes string[]",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/IDeleteProductRequestDTO"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "The product was deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/IDeletedProductResponseDTO"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Input is invalid or missing a required field",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/product/location": {
+            "patch": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Update a product location",
+                "description": "This endpoint allows you to update a product location.\nWhen a warehouse is deleted the product location will be removed.",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/IAssignWarehouseRequestDTO"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "The product location was updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Product"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "A product with this barcode does not exists",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Input is invalid or missing a required field",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Product": {
+                "type": "object",
+                "required": [
+                    "barcode",
+                    "name",
+                    "description",
+                    "quantity",
+                    "location"
+                ],
+                "properties": {
+                    "barcode": {
+                        "type": "string",
+                        "description": "The barcode of the product, this is also used as the unique identifier of the product",
+                        "example": "1234567890123"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "The name of the product",
+                        "example": "iPhone 13 Pro Max"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "The description of the product",
+                        "example": "Camera is not great but we love Apple ecosystem"
+                    },
+                    "quantity": {
+                        "type": "integer",
+                        "description": "The quantity of the product",
+                        "example": "49"
+                    },
+                    "location": {
+                        "$ref": "#/components/schemas/IProductLocation"
+                    }
+                }
+            },
+            "Warehouse": {
+                "type": "object",
+                "required": [
+                    "id",
+                    "name",
+                    "address",
+                    "aisles"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "UUIDv4",
+                        "description": "The unique identifier of the warehouse",
+                        "example": "599172a1-daea-4bfa-84de-da5a53e9964e"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "The name of the warehouse",
+                        "example": "Winnipeg warehouse and distribution centre"
+                    },
+                    "address": {
+                        "$ref": "#/components/schemas/IWarehouseAddress"
+                    }
+                }
+            },
+            "IProductLocation": {
+                "type": "object",
+                "properties": {
+                    "warehouseId": {
+                        "type": "string",
+                        "format": "UUIDv4",
+                        "description": "The warehouse ID is a UUIDv4 string.",
+                        "example": "599172a1-daea-4bfa-84de-da5a53e9964e"
+                    }
+                }
+            },
+            "IWarehouseAddress": {
+                "type": "object",
+                "required": [
+                   
+                    "city"
+                ],
+                "properties": {
+                    
+                    "city": {
+                        "type": "string",
+                        "description": "The city of the warehouse",
+                        "example": "Winnipeg"
+                    }
+                }
+            },
+            "IWarehouseAisles": {
+                "type": "object",
+                "required": [
+                    "rows",
+                    "binsPerRow"
+                ],
+                "properties": {
+                    "rows": {
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "Each warehouse can have multiple aisles. Aisles are numbered from 1 to N.",
+                        "example": "10"
+                    },
+                    "binsPerRow": {
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "Each aisle can have multiple bins. Bins are numbered from 1 to N.",
+                        "example": "25"
+                    }
+                }
+            },
+            "IUpsertProductRequestDTO": {
+                "type": "object",
+                "required": [
+                    "barcode",
+                    "name",
+                    "description",
+                    "quantity"
+                ],
+                "properties": {
+                    "barcode": {
+                        "type": "string",
+                        "description": "The barcode of the product, this is also used as the unique identifier of the product",
+                        "example": "1234567890123"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "The name of the product",
+                        "example": "iPhone 13 Pro Max"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "The description of the product",
+                        "example": "Camera is not great but we love Apple ecosystem"
+                    },
+                    "quantity": {
+                        "type": "integer",
+                        "description": "The quantity of the product",
+                        "example": "53"
+                    }
+                }
+            },
+            "IUpdateProductQuantityRequestDTO": {
+                "type": "object",
+                "required": [
+                    "barcode",
+                    "quantity"
+                ],
+                "properties": {
+                    "barcode": {
+                        "type": "string",
+                        "description": "The barcode of the product, this is also used as the unique identifier of the product",
+                        "example": "ABC1239879822"
+                    },
+                    "quantity": {
+                        "type": "integer",
+                        "description": "The quantity of the product",
+                        "example": "50"
+                    }
+                }
+            },
+            "IDeleteProductRequestDTO": {
+                "type": "object",
+                "required": [
+                    "barcodes"
+                ],
+                "properties": {
+                    "barcodes": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "The barcodes of the products to be deleted",
+                        "example": [
+                            "ABC1239879823",
+                            "ABC1239879824",
+                            "ABC1239879825",
+                            "ABC1239879826"
+                        ]
+                    }
+                }
+            },
+            "IDeletedProductResponseDTO": {
+                "type": "object",
+                "required": [
+                    "productsDeleted"
+                ],
+                "properties": {
+                    "productsDeleted": {
+                        "type": "integer",
+                        "description": "The quantity of items deleted",
+                        "example": "25"
+                    }
+                }
+            },
+            "IAssignWarehouseRequestDTO": {
+                "type": "object",
+                "required": [
+                    "barcode",
+                    "location"
+                ],
+                "properties": {
+                    "barcode": {
+                        "type": "string",
+                        "format": "UUIDv4",
+                        "description": "The barcode of the product, this is also used as the unique identifier of the product",
+                        "example": "1234567890123"
+                    },
+                    "location": {
+                        "$ref": "#/components/schemas/IProductLocation"
+                    }
+                }
+            },
+            "IUpsertWarehouseRequestDTO": {
+                "type": "object",
+                "required": [
+                    "name",
+                    "address",
+                    "aisles"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "The name of the warehouse",
+                        "example": "Winnipeg Warehouse"
+                    },
+                    "address": {
+                        "$ref": "#/components/schemas/IWarehouseAddress"
+                    }
+                }
+            },
+            "ErrorResponse": {
+                "type": "object",
+                "required": [
+                    "message"
+                ],
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "description": "The error message"
+                    }
+                }
+            },
+            "UUIDSchema": {
+                "type": "string",
+                "format": "uuidv4",
+                "example": "629b6b4b-9816-45bd-a9da-f711df5a2d19"
+            }
+        }
+    }
+}
