@@ -2,7 +2,7 @@
 
 Welcome to my submission for the fall 2022 backend challenge! 👋
 
-You can view the demo app on [Replit](https://replit.com/@gilhrpenner/Shopify-F22-backend)
+You can view the demo app on [Replit](https://shopify-challenge.harshach23.repl.co)
 
 - [Shopify - Fall 2022 Backend Challenge](#shopify---fall-2022-backend-challenge)
 
