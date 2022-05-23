@@ -28,7 +28,7 @@ First things first, make sure you have nodejs >= 16 installed.
 git clone https://github.com/harsha-vardhan-ch/shopify-challenge.git
 
 # Enter the folder
-cd Shopify-F22-backend
+cd shopify-challenge
 
 # Install all dependencies
 yarn install
